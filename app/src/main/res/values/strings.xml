@@ -2,5 +2,10 @@
     <string name="app_name">Popular Movies</string>
     <string name="action_settings">Settings</string>
 
-    
+    <!-- Supported Image sizes from the Movies DB API -->
+    <string name="img_poster_default_size">w185</string>
+    <string name="img_poster_larger_size">w342</string>
+    <string name="img_backdrop_default_size">w300</string>
+    <string name="img_backdrop_larger_size">w780</string>
+
 </resources>
