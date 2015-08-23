@@ -11,7 +11,29 @@ import android.view.ViewGroup;
  */
 public class MainActivityFragment extends Fragment {
 
-    public MainActivityFragment() {
+    private static final String LOG_TAG = MainActivityFragment.class.getSimpleName();
+
+    private MovieAdapter mMovieAdapter;
+    private GridView mGridView;
+
+    public MainActivityFragment() {}
+
+    @Override
+    public void onCreate(Bundle savedInstanceBundle) {
+        super.onCreate(savedInstanceBundle);
+
+        mMovieAdapter = new MovieAdapter(getActivity());
+
+        if (savedInstanceBundle == null) {
+            FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
+            fetchMoviesTask.execute(" ");
+
+        } else {
+            ArrayList<Movie> movies = savedInstanceBundle.getParcelableArrayList("movies");
+            mMovieAdapter.addAll(movies);
+            mMovieAdapter.notifyDataSetChanged();
+        }
+    }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
