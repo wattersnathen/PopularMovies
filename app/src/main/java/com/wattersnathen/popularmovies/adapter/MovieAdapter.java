@@ -27,6 +27,22 @@ public class MovieAdapter extends BaseAdapter {
         inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
     }
 
+    public void addAll(List<Movie> movies) {
+        if (mMovieList != null) {
+            mMovieList.addAll(movies);
+        }
+    }
+
+    public void clear() {
+        if (mMovieList != null) {
+            mMovieList.clear();
+        }
+    }
+
+    public List<Movie> getMovieList() {
+        return (mMovieList != null && mMovieList.size() > 0) ? mMovieList : null;
+    }
+
     @Override
     public int getCount() {
         return (mMovieList == null) ? 0 : mMovieList.size();
