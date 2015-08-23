@@ -12,6 +12,11 @@ import android.view.ViewGroup;
 public class MainActivityFragment extends Fragment {
 
     public MainActivityFragment() {
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("movies", (ArrayList<Movie>) mMovieAdapter.getMovieList());
     }
 
     @Override
