@@ -63,4 +63,8 @@ public class MovieAdapter extends BaseAdapter {
                 .error(R.mipmap.ic_launcher)
                 .into(holder.mImageView);
 
+
+    class ViewHolder {
+        ImageView mImageView;
+    }
 }
