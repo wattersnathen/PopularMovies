@@ -58,6 +58,9 @@ public class MovieAdapter extends BaseAdapter {
         return Long.valueOf(mMovieList.get(position).getId().toString());
     }
 
+
+        String imageUrl = MovieDBOperations.IMAGE_BASE_URL + "/" + MovieDBOperations.IMAGE_SIZE + "/" + movie.getPosterPath();
+
         Picasso.with(mContext)
                 .load(imageUrl)
                 .error(R.mipmap.ic_launcher)
