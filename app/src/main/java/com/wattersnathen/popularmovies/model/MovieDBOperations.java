@@ -15,8 +15,7 @@ public final class MovieDBOperations {
 
     // API key query information
     public static final String API_KEY = "api_key";
-    public static final String API_KEY_VALUE = "0dcaa23f20f00833b0ef404df9f2c20c";
-    //public static final String API_KEY_VALUE = String.valueOf(R.string.api_key);
+    public static final String API_KEY_VALUE = "ENTER YOUR KEY HERE";
 
     // Supported Sorting operations
     public static final String SORT = "sort_by";
