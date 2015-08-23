@@ -1,10 +1,33 @@
 package com.wattersnathen.popularmovies;
 
+import android.net.Uri;
+import android.os.AsyncTask;
+import android.os.Parcelable;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.GridView;
+
+import com.wattersnathen.popularmovies.adapter.MovieAdapter;
+import com.wattersnathen.popularmovies.model.Movie;
+import com.wattersnathen.popularmovies.model.MovieDBOperations;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -50,6 +73,96 @@ public class MainActivityFragment extends Fragment {
 
         return rootView;
     }
+
+    public class FetchMoviesTask extends AsyncTask<String, Void, List<Movie>> {
+
+        @Override
+        protected void onPostExecute(List<Movie> results) {
+            if (results != null) {
+
+                if (mGridView.getAdapter() == null) {
+                    mGridView.setAdapter(mMovieAdapter);
+                }
+
+                mMovieAdapter.clear();
+                mMovieAdapter.addAll(results);
+                mMovieAdapter.notifyDataSetChanged();
+            }
+        }
+
+        @Override
+        protected List<Movie> doInBackground(String... params) {
+            if (params.length == 0) {
+                return null;
+            }
+
+            HttpURLConnection urlConnection = null;
+            BufferedReader bufferedReader = null;
+
+            String moviesJsonString = null;
+
+            try {
+
+                Uri builtUri = Uri.parse(MovieDBOperations.BASE_DISCOVERY_URL).buildUpon()
+                        .appendQueryParameter(MovieDBOperations.SORT, MovieDBOperations.SORT_BY_POPULARITY)
+                        .appendQueryParameter(MovieDBOperations.API_KEY, MovieDBOperations.API_KEY_VALUE)
+                        .build();
+
+                URL url = new URL(builtUri.toString());
+
+                urlConnection = (HttpURLConnection) url.openConnection();
+                urlConnection.setRequestMethod("GET");
+                urlConnection.connect();
+
+                InputStream inputStream = urlConnection.getInputStream();
+                StringBuffer stringBuffer = new StringBuffer();
+
+                if (inputStream == null) {
+                    return null; // nothing to do
+                }
+
+                bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+
+                String line;
+
+                while ((line = bufferedReader.readLine()) != null) {
+                    stringBuffer.append(line + "\n");
+                }
+
+                if (stringBuffer.length() == 0) {
+                    return null;
+                }
+
+                moviesJsonString = stringBuffer.toString();
+
+            } catch (IOException e) {
+                Log.e(LOG_TAG, "Error ", e);
+                return null;
+
+            } finally {
+                if (urlConnection != null) {
+                    urlConnection.disconnect();
+                }
+
+                if (bufferedReader != null) {
+                    try {
+                        bufferedReader.close();
+                    } catch (final IOException e) {
+                        Log.e(LOG_TAG, "Error closing stream", e);
+                    }
+                }
+            }
+
+            try {
+                return getMovieDataFromJson(moviesJsonString);
+            } catch (JSONException e) {
+                Log.e(LOG_TAG, e.getMessage(), e);
+                e.printStackTrace();
+            }
+
+            return null;
+        }
+
         private List<Movie> getMovieDataFromJson(String movieJsonString) throws JSONException {
 
             JSONObject resultString = new JSONObject(movieJsonString);
