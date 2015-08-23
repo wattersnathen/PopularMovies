@@ -1,9 +1,14 @@
 package com.wattersnathen.popularmovies.model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.List;
+
 /**
  * Created by Nathen on 8/22/2015.
  */
-public class Movie {
+public class Movie implements Parcelable {
     private String mTitle;
     private Boolean mAdult;
     private String mBackdropPath;
@@ -18,6 +23,58 @@ public class Movie {
     private Boolean mVideo;
     private Double mVoteAverage;
     private Integer mVoteCount;
+
+    public Movie() {}
+
+    public Movie(Parcel in) {
+        mTitle = in.readString();
+        mAdult = Boolean.valueOf(in.readByte() == (byte) 1);
+        mBackdropPath = in.readString();
+        mGenreIds = in.readArrayList(ClassLoader.getSystemClassLoader());
+        mId = in.readLong();
+        mOriginalLanguage = in.readString();
+        mOriginalTitle = in.readString();
+        mOverview = in.readString();
+        mReleaseDate = in.readString();
+        mPosterPath = in.readString();
+        mPopularity = in.readDouble();
+        mVideo = Boolean.valueOf(in.readByte() == (byte) 1);
+        mVoteAverage = in.readDouble();
+        mVoteCount = in.readInt();
+    }
+
+    @Override
+    public int describeContents() { return 0; }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mTitle);
+        dest.writeByte((byte) (mAdult ? 1 : 0));
+        dest.writeString(mBackdropPath);
+        dest.writeList(mGenreIds);
+        dest.writeLong(mId);
+        dest.writeString(mOriginalLanguage);
+        dest.writeString(mOriginalTitle);
+        dest.writeString(mOverview);
+        dest.writeString(mReleaseDate);
+        dest.writeString(mPosterPath);
+        dest.writeDouble(mPopularity);
+        dest.writeByte((byte) (mVideo ? 1 : 0));
+        dest.writeDouble(mVoteAverage);
+        dest.writeInt(mVoteCount);
+    }
+
+    public static final Creator<Movie> CREATOR = new Creator<Movie>() {
+        @Override
+        public Movie createFromParcel(Parcel in) {
+            return new Movie(in);
+        }
+
+        @Override
+        public Movie[] newArray(int size) {
+            return new Movie[size];
+        }
+    };
 
     public String getTitle() {
         return mTitle;
