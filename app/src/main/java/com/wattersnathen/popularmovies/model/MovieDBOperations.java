@@ -27,6 +27,7 @@ public final class MovieDBOperations {
     public static final String IMAGE_BASE_URL = "http://image.tmdb.org/t/p/";
     public static final String IMAGE_SIZE = "w185";
     public static final String BACKDROP_IMAGE_SIZE = "w300";
+    public static final String BACKDROP_LARGE_IMAGE_SIZE = "w780";
 
     // JSON result Identifiers
     public static final String RESULTS = "results";
