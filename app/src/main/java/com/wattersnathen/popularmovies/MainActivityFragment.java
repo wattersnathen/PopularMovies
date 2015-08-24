@@ -1,5 +1,6 @@
 package com.wattersnathen.popularmovies;
 
+import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Parcelable;
@@ -10,7 +11,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.Toast;
 
 import com.wattersnathen.popularmovies.adapter.MovieAdapter;
 import com.wattersnathen.popularmovies.model.Movie;
@@ -71,6 +74,16 @@ public class MainActivityFragment extends Fragment {
         mGridView = (GridView) rootView.findViewById(R.id.movies_gridView);
         mGridView.setAdapter(mMovieAdapter);
 
+        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Movie movie = (Movie)mMovieAdapter.getItem(position);
+                Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
+                intent.putExtra("movie_detail", movie);
+                startActivity(intent);
+            }
+        });
+
         return rootView;
     }
 
@@ -79,10 +92,6 @@ public class MainActivityFragment extends Fragment {
         @Override
         protected void onPostExecute(List<Movie> results) {
             if (results != null) {
-
-                if (mGridView.getAdapter() == null) {
-                    mGridView.setAdapter(mMovieAdapter);
-                }
 
                 mMovieAdapter.clear();
                 mMovieAdapter.addAll(results);
@@ -95,6 +104,8 @@ public class MainActivityFragment extends Fragment {
             if (params.length == 0) {
                 return null;
             }
+
+
 
             HttpURLConnection urlConnection = null;
             BufferedReader bufferedReader = null;
