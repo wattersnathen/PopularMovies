@@ -9,6 +9,9 @@ import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -42,17 +45,48 @@ public class MainActivityFragment extends Fragment {
     private MovieAdapter mMovieAdapter;
     private GridView mGridView;
 
+    private String mPreviousSearch = "";
+
     public MainActivityFragment() {}
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.menu_main, menu);
+        super.onCreateOptionsMenu(menu, inflater);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+
+        switch (id) {
+            case R.id.sort_by_rating:
+                if (!mPreviousSearch.equals("vote_average.desc")) {
+                    new FetchMoviesTask().execute("vote_average.desc");
+                    mPreviousSearch = "vote_average.desc";
+                }
+                return true;
+            case R.id.sort_by_popularity:
+                if (!mPreviousSearch.equals("popularity.desc")) {
+                    new FetchMoviesTask().execute("popularity.desc");
+                    mPreviousSearch = "popularity.desc";
+                }
+                return true;
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
 
     @Override
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
+        setHasOptionsMenu(true);
 
         mMovieAdapter = new MovieAdapter(getActivity());
 
         if (savedInstanceBundle == null) {
             FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
-            fetchMoviesTask.execute(" ");
+            fetchMoviesTask.execute("popularity.desc");
 
         } else {
             ArrayList<Movie> movies = savedInstanceBundle.getParcelableArrayList("movies");
@@ -105,7 +139,7 @@ public class MainActivityFragment extends Fragment {
                 return null;
             }
 
-
+            String searchSortRequest = params[0];
 
             HttpURLConnection urlConnection = null;
             BufferedReader bufferedReader = null;
@@ -115,7 +149,7 @@ public class MainActivityFragment extends Fragment {
             try {
 
                 Uri builtUri = Uri.parse(MovieDBOperations.BASE_DISCOVERY_URL).buildUpon()
-                        .appendQueryParameter(MovieDBOperations.SORT, MovieDBOperations.SORT_BY_POPULARITY)
+                        .appendQueryParameter(MovieDBOperations.SORT, searchSortRequest)
                         .appendQueryParameter(MovieDBOperations.API_KEY, MovieDBOperations.API_KEY_VALUE)
                         .build();
 

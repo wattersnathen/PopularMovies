@@ -27,10 +27,6 @@ public class MovieDetailFragment extends Fragment {
 
     private String mImageUrl = MovieDBOperations.IMAGE_BASE_URL + "/" + MovieDBOperations.BACKDROP_IMAGE_SIZE + "/";
 
-    public MovieDetailFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -45,6 +41,9 @@ public class MovieDetailFragment extends Fragment {
 
         if (intent != null && intent.hasExtra("movie_detail")) {
             Movie movie = intent.getParcelableExtra("movie_detail");
+
+            getActivity().setTitle(movie.getTitle());
+
             mBackdropImageView = (ImageView) rootView.findViewById(R.id.movie_detail_backdrop_image);
             mThumbnailImageView = (ImageView) rootView.findViewById(R.id.movie_detail_thumbnail);
             mTitleTextView = (TextView) rootView.findViewById(R.id.movie_detail_title);
