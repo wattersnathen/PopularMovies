@@ -20,7 +20,6 @@ import android.widget.Toast;
 
 import com.wattersnathen.popularmovies.adapter.MovieAdapter;
 import com.wattersnathen.popularmovies.model.Movie;
-import com.wattersnathen.popularmovies.model.MovieDBOperations;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -85,20 +84,20 @@ public class MainActivityFragment extends Fragment {
         mMovieAdapter = new MovieAdapter(getActivity());
 
         if (savedInstanceBundle == null) {
-            FetchMoviesTask fetchMoviesTask = new FetchMoviesTask();
-            fetchMoviesTask.execute("popularity.desc");
+            executeFetchMoviesTask(getSortPreference());
 
         } else {
-            ArrayList<Movie> movies = savedInstanceBundle.getParcelableArrayList("movies");
+            ArrayList<Movie> movies = savedInstanceBundle
+                    .getParcelableArrayList(getString(R.string.parceable_list_label));
             mMovieAdapter.addAll(movies);
-            mMovieAdapter.notifyDataSetChanged();
         }
     }
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("movies", (ArrayList<Movie>) mMovieAdapter.getMovieList());
+        outState.putParcelableArrayList(getString(R.string.parceable_list_label),
+                (ArrayList<Movie>) mMovieAdapter.getMovieList());
     }
 
     @Override
@@ -211,26 +210,26 @@ public class MainActivityFragment extends Fragment {
         private List<Movie> getMovieDataFromJson(String movieJsonString) throws JSONException {
 
             JSONObject resultString = new JSONObject(movieJsonString);
-            JSONArray results = resultString.getJSONArray(MovieDBOperations.RESULTS);
+            JSONArray results = resultString.getJSONArray(getString(R.string.api_results));
 
             List<Movie> movies = new ArrayList<>();
             for (int index = 0; index < results.length(); index++) {
                 Movie movie = new Movie();
                 JSONObject movieObject = results.getJSONObject(index);
 
-                movie.setAdult(movieObject.getBoolean(MovieDBOperations.ADULT));
-                movie.setBackdropPath(movieObject.getString(MovieDBOperations.BACKDROP_PATH));
-                movie.setId(movieObject.getLong(MovieDBOperations.ID));
-                movie.setOriginalLanguage(movieObject.getString(MovieDBOperations.ORIGINAL_LANGUAGE));
-                movie.setOriginalTitle(movieObject.getString(MovieDBOperations.ORIGINAL_TITLE));
-                movie.setOverview(movieObject.getString(MovieDBOperations.OVERVIEW));
-                movie.setReleaseDate(movieObject.getString(MovieDBOperations.RELEASE_DATE));
-                movie.setPosterPath(movieObject.getString(MovieDBOperations.POSTER_PATH));
-                movie.setPopularity(movieObject.getDouble(MovieDBOperations.POPULARITY));
-                movie.setTitle(movieObject.getString(MovieDBOperations.TITLE));
-                movie.setVideo(movieObject.getBoolean(MovieDBOperations.VIDEO));
-                movie.setVoteAverage(movieObject.getDouble(MovieDBOperations.VOTE_AVERAGE));
-                movie.setVoteCount(movieObject.getInt(MovieDBOperations.VOTE_COUNT));
+                movie.setAdult(movieObject.getBoolean(getString(R.string.api_adult)));
+                movie.setBackdropPath(movieObject.getString(getString(R.string.api_backdrop_path)));
+                movie.setId(movieObject.getLong(getString(R.string.api_id)));
+                movie.setOriginalLanguage(movieObject.getString(getString(R.string.api_original_language)));
+                movie.setOriginalTitle(movieObject.getString(getString(R.string.api_original_title)));
+                movie.setOverview(movieObject.getString(getString(R.string.api_overview)));
+                movie.setReleaseDate(movieObject.getString(getString(R.string.api_release_date)));
+                movie.setPosterPath(movieObject.getString(getString(R.string.api_poster_path)));
+                movie.setPopularity(movieObject.getDouble(getString(R.string.api_popularity)));
+                movie.setTitle(movieObject.getString(getString(R.string.api_title)));
+                movie.setVideo(movieObject.getBoolean(getString(R.string.api_video)));
+                movie.setVoteAverage(movieObject.getDouble(getString(R.string.api_vote_average)));
+                movie.setVoteCount(movieObject.getInt(getString(R.string.api_vote_count)));
 
                 movies.add(movie);
             }
