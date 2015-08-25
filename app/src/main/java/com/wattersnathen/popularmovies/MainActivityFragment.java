@@ -3,8 +3,7 @@ package com.wattersnathen.popularmovies;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.AsyncTask;
-import android.os.Parcelable;
-import android.support.annotation.Nullable;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -45,7 +44,6 @@ public class MainActivityFragment extends Fragment {
     private GridView mGridView;
 
     private boolean mErrorOccurred;
-    private String mPreviousSearch = "";
 
     public MainActivityFragment() {}
 
@@ -61,16 +59,10 @@ public class MainActivityFragment extends Fragment {
 
         switch (id) {
             case R.id.sort_by_rating:
-                if (!mPreviousSearch.equals("vote_average.desc")) {
-                    new FetchMoviesTask().execute("vote_average.desc");
-                    mPreviousSearch = "vote_average.desc";
-                }
+                executeFetchMoviesTask(getString(R.string.sort_by_average_vote));
                 return true;
             case R.id.sort_by_popularity:
-                if (!mPreviousSearch.equals("popularity.desc")) {
-                    new FetchMoviesTask().execute("popularity.desc");
-                    mPreviousSearch = "popularity.desc";
-                }
+                executeFetchMoviesTask(getString(R.string.sort_by_popularity));
                 return true;
         }
 
@@ -131,6 +123,7 @@ public class MainActivityFragment extends Fragment {
                 Movie movie = (Movie)mMovieAdapter.getItem(position);
                 Intent intent = new Intent(getActivity(), MovieDetailActivity.class);
                 intent.putExtra("movie_detail", movie);
+
                 startActivity(intent);
             }
         });
