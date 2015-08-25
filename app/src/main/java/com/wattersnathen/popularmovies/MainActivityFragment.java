@@ -77,6 +77,23 @@ public class MainActivityFragment extends Fragment {
         return super.onOptionsItemSelected(item);
     }
 
+    private void executeFetchMoviesTask(String sortMethod) {
+        mErrorOccurred = false;
+        PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .edit()
+                .putString(getString(R.string.pref_sort_by_label), sortMethod)
+                .commit();
+        new FetchMoviesTask().execute(getSortPreference());
+    }
+
+    private String getSortPreference() {
+        return PreferenceManager.getDefaultSharedPreferences(getActivity())
+                .getString(
+                        getString(R.string.pref_sort_by_label),
+                        getString(R.string.sort_by_popularity)
+                );
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceBundle) {
         super.onCreate(savedInstanceBundle);
