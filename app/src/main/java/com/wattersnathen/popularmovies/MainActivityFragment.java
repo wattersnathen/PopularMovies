@@ -167,9 +167,12 @@ public class MainActivityFragment extends Fragment {
 
             try {
 
-                Uri builtUri = Uri.parse(MovieDBOperations.BASE_DISCOVERY_URL).buildUpon()
-                        .appendQueryParameter(MovieDBOperations.SORT, searchSortRequest)
-                        .appendQueryParameter(MovieDBOperations.API_KEY, MovieDBOperations.API_KEY_VALUE)
+                Uri builtUri = Uri.parse(getString(R.string.base_url)
+                        + getString(R.string.discover_endpoint_url))
+                        .buildUpon()
+                        .appendQueryParameter(getString(R.string.pref_sort_by_label), searchSortRequest)
+                        .appendQueryParameter(getString(R.string.api_minimum_votes_label), getString(R.string.api_minimum_votes_value))
+                        .appendQueryParameter(getString(R.string.api_key_label), getString(R.string.api_key_value))
                         .build();
 
                 URL url = new URL(builtUri.toString());
