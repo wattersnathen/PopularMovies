@@ -44,6 +44,7 @@ public class MainActivityFragment extends Fragment {
     private MovieAdapter mMovieAdapter;
     private GridView mGridView;
 
+    private boolean mErrorOccurred;
     private String mPreviousSearch = "";
 
     public MainActivityFragment() {}
@@ -124,6 +125,15 @@ public class MainActivityFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<Movie> results) {
+
+            if (mErrorOccurred) {
+                Toast.makeText(
+                        getActivity(),
+                        R.string.network_request_error_message,
+                        Toast.LENGTH_LONG)
+                        .show();
+            }
+
             if (results != null) {
 
                 mMovieAdapter.clear();
@@ -181,6 +191,7 @@ public class MainActivityFragment extends Fragment {
 
             } catch (IOException e) {
                 Log.e(LOG_TAG, "Error ", e);
+                mErrorOccurred = true;
                 return null;
 
             } finally {
