@@ -3,17 +3,14 @@ package com.wattersnathen.popularmovies.adapter;
 import android.app.Activity;
 import android.content.Context;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 import com.wattersnathen.popularmovies.R;
 import com.wattersnathen.popularmovies.model.Movie;
-import com.wattersnathen.popularmovies.model.MovieDBOperations;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,7 +24,8 @@ public class MovieAdapter extends BaseAdapter {
 
     private Context mContext;
     private List<Movie> mMovieList;
-    private LayoutInflater inflater;
+
+    private String mBaseUrl = "";
 
     public MovieAdapter(Context context) {
         this(context, new ArrayList<Movie>());
@@ -36,7 +34,8 @@ public class MovieAdapter extends BaseAdapter {
     public MovieAdapter(Context context, List<Movie> movies) {
         mContext = context;
         mMovieList = movies;
-        inflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        mBaseUrl = mContext.getString(R.string.image_base_url)
+                + mContext.getString(R.string.thumbnail_image_size);
     }
 
     public void addAll(List<Movie> movies) {
@@ -75,7 +74,6 @@ public class MovieAdapter extends BaseAdapter {
         Movie movie = (Movie) getItem(position);
 
         ViewHolder holder;
-        ImageView imageView;
 
         if (convertView == null) {
             convertView = ((Activity) mContext).getLayoutInflater().inflate(R.layout.movie_grid_item, parent, false);
@@ -86,12 +84,15 @@ public class MovieAdapter extends BaseAdapter {
             holder = (ViewHolder) convertView.getTag();
         }
 
-        String imageUrl = MovieDBOperations.IMAGE_BASE_URL + "/" + MovieDBOperations.IMAGE_SIZE + "/" + movie.getPosterPath();
+        String prevUrl = mBaseUrl;
+        mBaseUrl = mBaseUrl + movie.getPosterPath();
 
         Picasso.with(mContext)
-                .load(imageUrl)
+                .load(mBaseUrl)
                 .error(R.mipmap.ic_launcher)
                 .into(holder.mImageView);
+
+        mBaseUrl = prevUrl;
 
         return convertView;
     }

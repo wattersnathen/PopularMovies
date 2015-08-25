@@ -1,20 +1,17 @@
 package com.wattersnathen.popularmovies;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.net.Uri;
+
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.squareup.picasso.Picasso;
 import com.wattersnathen.popularmovies.model.Movie;
-import com.wattersnathen.popularmovies.model.MovieDBOperations;
 
 public class MovieDetailFragment extends Fragment {
 
@@ -25,11 +22,13 @@ public class MovieDetailFragment extends Fragment {
     private TextView mRatingsTextView;
     private TextView mSynopsisTextView;
 
-    private String mImageUrl = MovieDBOperations.IMAGE_BASE_URL + "/" + MovieDBOperations.BACKDROP_IMAGE_SIZE + "/";
+    private String mImageUrl = "";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        mImageUrl = getString(R.string.image_base_url) + "/"
+                + getString(R.string.backdrop_image_size) + "/";
     }
 
     @Override
