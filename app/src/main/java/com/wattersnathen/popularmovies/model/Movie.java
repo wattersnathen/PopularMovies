@@ -28,7 +28,7 @@ public class Movie implements Parcelable {
 
     public Movie(Parcel in) {
         mTitle = in.readString();
-        mAdult = Boolean.valueOf(in.readByte() == (byte) 1);
+        mAdult = (in.readByte() == (byte) 1);
         mBackdropPath = in.readString();
         mGenreIds = in.readArrayList(ClassLoader.getSystemClassLoader());
         mId = in.readLong();
@@ -38,7 +38,7 @@ public class Movie implements Parcelable {
         mReleaseDate = in.readString();
         mPosterPath = in.readString();
         mPopularity = in.readDouble();
-        mVideo = Boolean.valueOf(in.readByte() == (byte) 1);
+        mVideo = (in.readByte() == (byte) 1);
         mVoteAverage = in.readDouble();
         mVoteCount = in.readInt();
     }
